@@ -3,9 +3,13 @@
     "builds": [
       {
         "src": "manage.py",
-        "use": "@vercel/python",
-        "config": { "entrypoint": "manage.py runserver" }
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "manage.py"
       }
     ]
   }
-  
