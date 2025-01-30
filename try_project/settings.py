@@ -140,7 +140,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # collectstatic ile toplama yapacağın 
 MEDIA_ROOT= BASE_DIR/"media"
 
 if 'VERCEL' in os.environ:
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['.vercel.app']
 
 
