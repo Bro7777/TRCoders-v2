@@ -1,10 +1,10 @@
 {
     "version": 2,
     "builds": [
-      { "src": "TRCoders/asgi.py", "use": "@vercel/python" }
+      { "src": "try_project/asgi.py", "use": "@vercel/python" }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "TRCoders.asgi.application" }
+      { "src": "/(.*)", "dest": "try_project.asgi.application" }
     ]
   }
   
