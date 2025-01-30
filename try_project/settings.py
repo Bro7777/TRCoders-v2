@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,8 +69,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'try_project.wsgi.application'
-
+#WSGI_APPLICATION = 'try_project.wsgi.application'
+ASGI_APPLICATION = 'try_project.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -137,6 +138,10 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # collectstatic ile toplama yapacağın yer
 MEDIA_ROOT= BASE_DIR/"media"
+
+if 'VERCEL' in os.environ:
+    DEBUG = False
+    ALLOWED_HOSTS = ['.vercel.app']
 
 
 # settings.py
