@@ -1,0 +1,336 @@
+<html lang="tr">
+{% load custom_filters %}
+<script>
+  window.onload = function() {
+      const currentUrl = window.location.href;
+
+      // Mobil yönlendirme için
+      if (window.innerWidth <= 768 && !currentUrl.includes('mobile')) {
+          window.location.href = "{% url 'groups:settings_mobile' group_id=group.id %}";
+      } 
+      // PC yönlendirme için
+      else if (window.innerWidth > 768) {
+          window.location.href = "{% url 'groups:settings' group.id  %}";
+      }
+  };
+</script>
+  <head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Top Navigation Menu -->
+    <div class="topnav" style="margin:0">
+      <a href="{% url 'index:index_mobile' %}" style="margin-left:0;text-align:left;" class="active"><img src="{% static 'img/Logo2.png' %}" width="200" height="60" ></a>
+      <!-- Navigation links (hidden by default) -->
+      <div id="myLinks">
+        <a href="{% url 'postlar:post_lister_mobile' %}">Ana Sayfa</a>
+        <a href="{% url 'problems:all_problems_mobile' %}">Problemler</a>
+        <a href="{% url 'groups:all_groups_mobile' %}">Gruplar</a>
+        <a href="{% url 'rankings:ranking_mobile' %}">Siralama</a>
+        {% if user.is_authenticated %}
+              <div style="padding: 5px;text-align: center;display: flex;margin-left: 28%;">
+                <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;margin-top: 3px; width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                <a href="{% url 'users:profile_mobile' user.username %}" style="margin-bottom: 5px;" >{{ user.username }}</a>
+              </div>
+            {% else %}
+               <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+        {% endif %}
+      </div>
+      <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </head>
+  <body>
+
+    <div class="container">
+        <div style=" margin-bottom: 30px; background-color: #333;border-radius: 25px;text-align: center;padding: 8px;display: flex;justify-content: space-around;">
+            <a href="{% url 'groups:settings_mobile' group.id %}" style="text-decoration: none;background-color: white;color: #333; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Ana ayarlar</h4></a>
+            <a href="{% url 'groups:member_management_mobile' group.id %}" style="text-decoration: none;background-color: white;color: #333; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Üye ayarları</h4></a>
+            <a href="{% url 'groups:lessons_mobile' group.id %}" style="text-decoration: none;background-color: white;color: black; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Geri</h4></a>
+        </div>
+
+        
+        
+
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+        <h1 id="title">{{group.name}}-Üye Yönetimi</h1>
+        <a href="{% url 'groups:add_members_mobile' group.id %}" class="add_member">&#43;</a>
+           <style>
+            .add_member{
+            padding: 6px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            
+            color: white;
+            background-color: cornflowerblue;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 10%;
+            font-size: 18px;
+            border-radius: 15px;
+            transition: all .55s ease;
+            font-weight: bolder;
+            }
+           </style>
+        
+        </div>
+        <hr style="border: 1px solid black; width: 100%; margin: auto;">
+
+
+<div class="group-members">
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Rank</th>
+                <th>Kaldır</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+              <tr>
+                <td>{{member.username}}</td>
+                <td>Unrated</td>
+                {% if member != group.admin %}
+                <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="member_id" value="{{ member.id }}">
+                    <td><button type="submit">Gruptan Çıkar</button></td>
+                </form>
+                {%endif%}
+             </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+        
+
+        
+        
+
+        
+
+        
+    </div>
+    
+       
+
+</body>
+<style>
+
+    /* Alert bar (yatay çubuk) */
+    .alert {
+        display: none;
+        background-color: #d4edda;
+        color: #155724;
+        text-align: left;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-left: 1%;
+        margin-right: 1%;
+        border-bottom: 1px solid #c3e6cb;
+        border-radius: 5px;
+
+    }
+
+    .alert .close-btn {
+        background-color: transparent;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        float: right;
+        margin-right: 10px;
+    }
+    .bp{
+        text-decoration: none;
+        color: #777;
+    }
+.topnav {
+  position: relative;
+  margin:0px;
+  padding:0px;
+  overflow: hidden;
+  background-color: #333;
+  border-bottom-left-radius:50px;
+  border-bottom-right-radius:50px;
+}
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+  display: none;
+}
+
+/* Style navigation menu links */
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+  text-align:center;
+}
+
+/* Style the hamburger menu */
+.topnav a.icon {
+  background: none;
+  display: block;
+  position:absolute;
+  top:20;
+  right:12;
+}
+
+/* Add a grey background color on mouse-over */
+.topnav a:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Style the active link (or home/logo) */
+.active {
+  background-color: #333;
+  color: white;
+  margin-left:0px;
+  
+}
+
+.container {
+    margin: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background-image: url('{% static "img/Background2.png" %}');
+    background-size:100% 100%;
+
+
+}
+.detail_linki{
+width: 25px;
+height: 25px;
+border-radius: 50%;
+background-color: #333;
+border: 1px solid transparent;
+text-decoration: none;
+color: #f4f4f4;
+text-align: center;
+transition: all .55s ease;
+}
+.detail_linki:hover{
+background-color: black;
+}
+.pagination-container {
+margin-top: 20px;
+}
+
+.pagination {
+display: inline-flex;
+padding-left: 0;
+list-style: none;
+}
+
+.pagination .page-item .page-link {
+color: #434343;
+border: 1px solid #ddd;
+
+padding: 5px 10px;
+
+background-color: rgb(255, 255, 255);
+transition: background-color 0.3s, color 0.3s;
+text-decoration: none;
+}
+
+.pagination .page-item.active .page-link {
+background-color: black;
+color: white;
+border-color: black;
+}
+
+.pagination .page-link:hover {
+background-color: #e9ecef;
+color: black;
+border-color: #ddd;
+}
+.pagination .page-item.active .page-link.rounded {
+border-radius: 10px 0 0 10px; /* Sayfa 1'deyken 1 numaralı bağlantıyı daha kavisli yap */
+
+}
+
+.group-members table {
+    width: 100%;
+    border-collapse: collapse; /* Çizgileri birleştirir */
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+    border: 1px solid #ddd; /* Tabloya kenarlık ekler */
+    border-radius: 12px; /* Kıvrımlı kenar */
+    overflow: hidden; /* Radius'un düzgün görünmesi için taşmaları gizler */
+}
+
+.group-members th, .group-members td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd; /* Alt çizgi */
+}
+
+.group-members thead th {
+    background-color: #f4f4f4; /* Başlık için açık gri arka plan */
+    font-weight: bold;
+}
+
+.group-members tbody tr:last-child td {
+    border-bottom: none; /* Son satırdaki alt çizgiyi kaldırır */
+}
+
+.group-members tr:nth-child(even) {
+    background-color: #f9f9f9; /* Çift satırlar için açık renk arka plan */
+}
+
+
+
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+          const alertBox = document.getElementById('customAlert');
+          const closeButtons = document.querySelectorAll('.close-btn');
+
+          // Her kapatma butonuna tıklama olayı ekle
+          closeButtons.forEach(button => {
+              button.addEventListener('click', () => {
+                  alertBox.style.display = 'none';
+              });
+          });
+
+          // Eğer mesaj varsa alert çubuğunu göster
+          if (alertBox) {
+              alertBox.style.display = 'block';
+          }
+      });
+      function myFunction() {
+    var x = document.getElementById("myLinks");
+    if (x.style.display === "block") {
+      x.style.display = "none";
+    } else {
+      x.style.display = "block";
+    }
+  }
+</script>
+
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="tr">
+{% load static %}
+<head>
+    <head>
+        <title>TR-Coders</title>
+        <ul class="navbar">
+            <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+            <li class="li2"><a href="{% url 'postlar:post_lister' %}" style="padding: 16px 16px">Ana Sayfa</a></li>
+            <li class="li3"><a href="Trying_contact.html" style="padding: 16px 16px">Problemler</a></li>
+            
+            <li class="li4" style="float: right;">
+                {% if user.is_authenticated %}
+                  <div style="display: flex;justify-content: space-between;padding: 5px;">
+                    <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                    <a href="{% url 'users:profile_viewer' user.username %}"  style="margin-top: 11px;margin-left: 5px;">{{ user.username }}</a>
+                  </div>
+                {% else %}
+                   <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+                {% endif %}
+            </li>
+            <li class="li5"><a href="{% url 'groups:all_groups' %}" style="padding: 16px 16px">Gruplar</a></li>
+            <li class="li6"><a href="{% url 'rankings:ranking' %}" style="padding: 16px 16px">Sıralama</a></li>
+        </ul>
+    </head>
+    <style>
+        #search-results {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .result-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+    <h1>{{ group.name }}: Üye Ekle</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="search">Kullanıcı Ara:</label>
+        <input type="text" id="search" placeholder="Kullanıcı adı girin..." oninput="searchUsers(this.value)">
+        <div id="search-results"></div>
+
+        <h3 style="text-align: center;">Seçilen Üyeler:</h3>
+        <div id="selected-members"></div>
+        <input type="hidden" name="members" id="members">
+
+        <input type="submit" class="submit_input" value="Grubu tamamla"></input>
+    </form>
+    </div>
+
+    <script>
+        const searchResults = document.getElementById('search-results');
+        const selectedMembers = document.getElementById('selected-members');
+        const membersInput = document.getElementById('members');
+
+        let selectedUsers = [];
+
+        function searchUsers(query) {
+            fetch(`/groups/search-users/?q=${query}`)
+                .then(response => response.json())
+                .then(users => {
+                    searchResults.innerHTML = '';
+                    users.forEach(user => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        div.textContent = user.username;
+                        div.dataset.userId = user.id;
+
+                        div.onclick = () => addUser(user);
+                        searchResults.appendChild(div);
+                    });
+                });
+        }
+
+        function addUser(user) {
+            if (!selectedUsers.includes(user.id)) {
+                selectedUsers.push(user.id);
+                const div = document.createElement('div');
+                div.style.display='flex';
+                div.style.justifyContent='space-between';
+                const prg=document.createElement('p');
+                prg.textContent=user.username;
+                prg.style.textAlign='center';
+                div.appendChild(prg);
+                div.dataset.userId = user.id;
+                
+
+                const removeBtn = document.createElement('a');
+                removeBtn.style.color='#f4f4f4';
+                removeBtn.style.backgroundColor='#dc3545';
+                removeBtn.style.padding='2px';
+                removeBtn.style.borderRadius='10px';
+                
+
+                const prg1=document.createElement('p');
+                prg1.textContent='Kaldır';
+                removeBtn.appendChild(prg1);
+                removeBtn.style.fontSize='auto';
+
+                removeBtn.onclick = () => removeUser(user.id, div);
+                
+                
+
+                div.appendChild(removeBtn);
+                selectedMembers.appendChild(div);
+
+                
+
+                updateMembersInput();
+            }
+            const hr=document.createElement('hr');
+            selectedMembers.appendChild(hr);
+           
+        }
+
+        function removeUser(userId, element) {
+            selectedUsers = selectedUsers.filter(id => id !== userId);
+            element.remove();
+            updateMembersInput();
+        }
+
+        function updateMembersInput() {
+            membersInput.value = selectedUsers.join(',');
+        }
+    </script>
+</body>
+<style>
+    .navbar{
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        align-items: center;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+    .navbar li{
+        float: left;
+        
+        
+        
+    }
+    .navbar a{
+        display: block;
+        
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        
+        
+        text-decoration: none;
+    }
+    .li1{
+        padding: 12px 12px;
+    }
+    .li2{
+        padding: 18px 18px;
+    }
+    .li3{
+        padding: 18px 18px;
+    }
+    .li4{
+        padding: 18px 18px;
+        float: right;
+        margin-right: 50px;
+    }
+    .li5{
+        padding: 18px 18px;
+    }
+    .li6{
+        padding: 18px 18px;
+    }
+    .li2:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li3:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li4:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li5:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li6:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    
+    
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        background-image: url("{% static 'img/Background2.png' %}");
+        background-size:  1300px 600px;
+        
+       
+    }
+    header {
+        
+        color: black;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .container {
+        margin: 40px;
+        margin-left: 400px;
+        margin-right: 400px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    input, textarea, select {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            border: 2px solid #ccc; /* Kenarlık rengi */
+            border-radius: 20px; /* Kenar yuvarlama */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* İç gölge */
+            transition: border-color 0.3s; /* Kenarlık rengi geçiş efekti */
+            width: 96%; /* Genişlik ayarı */
+            margin-bottom: 5px; /* Alt boşluk */
+        }
+
+    input:focus, textarea:focus, select:focus {
+            border-color: #007bff; /* Odaklandığında kenarlık rengi */
+            outline: none; /* Varsayılan odak çerçevesini kaldırma */
+        }
+
+    input::placeholder, textarea::placeholder {
+            color: #aaa; /* Yer tutucu metin rengi */
+            font-style: italic; /* Yer tutucu metni italik yapma */
+        }
+    .submit_input{
+        margin-top: 20px;
+        width: 100%;font-size: 16px;font-weight: 700;background-color: #333;color: #f4f4f4;
+    }
+    .submit_input:hover{
+        color: #f4f4f4;
+        background-color: black;
+        transition: all .55s ease;
+    }
+    
+    
+</style>
+</html>

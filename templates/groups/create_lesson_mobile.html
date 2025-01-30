@@ -1,0 +1,249 @@
+<html lang="tr">
+{% load custom_filters %}
+<script>
+  window.onload = function() {
+      const currentUrl = window.location.href;
+
+      // Mobil yönlendirme için
+      if (window.innerWidth <= 768 && !currentUrl.includes('mobile')) {
+          window.location.href = "{% url 'groups:create_lesson_mobile' group.id %}";
+      } 
+      // PC yönlendirme için
+      else if (window.innerWidth > 768) {
+          window.location.href = "{% url 'groups:create_lesson' group.id %}";
+      }
+  };
+</script>
+  <head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Top Navigation Menu -->
+    <div class="topnav" style="margin:0">
+      <a href="{% url 'index:index_mobile' %}" style="margin-left:0;text-align:left;" class="active"><img src="{% static 'img/Logo2.png' %}" width="200" height="60" ></a>
+      <!-- Navigation links (hidden by default) -->
+      <div id="myLinks">
+        <a href="{% url 'postlar:post_lister_mobile' %}">Ana Sayfa</a>
+        <a href="{% url 'problems:all_problems_mobile' %}">Problemler</a>
+        <a href="{% url 'groups:all_groups_mobile' %}">Gruplar</a>
+        <a href="{% url 'rankings:ranking_mobile' %}">Siralama</a>
+        {% if user.is_authenticated %}
+              <div style="padding: 5px;text-align: center;display: flex;margin-left: 28%;">
+                <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;margin-top: 3px; width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                <a href="{% url 'users:profile_mobile' user.username %}" style="margin-bottom: 5px;" >{{ user.username }}</a>
+              </div>
+            {% else %}
+               <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+        {% endif %}
+      </div>
+      <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </head>
+  <body>
+    <div class="container">
+    <h1>Grup Bilgileri</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="lesson_name">Ders Konusu:</label>
+        <input type="text" id="lesson_name" name="lesson_name" required><br><br>
+    
+        <label for="lesson_description">Konu Anlatımı:</label>
+        <textarea id="lesson_description" name="lesson_description" rows="4" required></textarea><br><br>
+
+        <span style="margin-left: 10px;">PDF ekle:</span>
+        <input type="file" name="pdf" accept="application/pdf" style="width: auto;border: none;box-shadow: none;"><br><br>
+
+        <input class="submit_input" type="submit" value="Dersi tamamla"></input>
+    </form>
+    </div>
+</body>
+<style>
+  
+    /* Alert bar (yatay çubuk) */
+    .alert {
+        display: none;
+        background-color: #d4edda;
+        color: #155724;
+        text-align: left;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-left: 1%;
+        margin-right: 1%;
+        border-bottom: 1px solid #c3e6cb;
+        border-radius: 5px;
+
+    }
+
+    .alert .close-btn {
+        background-color: transparent;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        float: right;
+        margin-right: 10px;
+    }
+    .bp{
+        text-decoration: none;
+        color: #777;
+    }
+.topnav {
+  position: relative;
+  margin:0px;
+  padding:0px;
+  overflow: hidden;
+  background-color: #333;
+  border-bottom-left-radius:50px;
+  border-bottom-right-radius:50px;
+}
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+  display: none;
+}
+
+/* Style navigation menu links */
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+  text-align:center;
+}
+
+/* Style the hamburger menu */
+.topnav a.icon {
+  background: none;
+  display: block;
+  position:absolute;
+  top:20;
+  right:12;
+}
+
+/* Add a grey background color on mouse-over */
+.topnav a:hover {
+  background-color: black;
+  color: white;
+}
+
+/* Style the active link (or home/logo) */
+.active {
+  background-color: #333;
+  color: white;
+  margin-left:0px;
+  
+}
+
+.container {
+    margin: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    background-image: url('{% static "img/Background2.png" %}');
+    background-size:100% 100%;
+
+
+}
+.detail_linki{
+width: 25px;
+height: 25px;
+border-radius: 50%;
+background-color: #333;
+border: 1px solid transparent;
+text-decoration: none;
+color: #f4f4f4;
+text-align: center;
+transition: all .55s ease;
+}
+.detail_linki:hover{
+background-color: black;
+}
+.developer li{
+        font-size: 25px;
+    }
+
+    input, textarea, select {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            border: 2px solid #ccc; /* Kenarlık rengi */
+            border-radius: 20px; /* Kenar yuvarlama */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* İç gölge */
+            transition: border-color 0.3s; /* Kenarlık rengi geçiş efekti */
+            width: 92%; /* Genişlik ayarı */
+            margin-bottom: 5px; /* Alt boşluk */
+        }
+
+    input:focus, textarea:focus, select:focus {
+            border-color: #007bff; /* Odaklandığında kenarlık rengi */
+            outline: none; /* Varsayılan odak çerçevesini kaldırma */
+        }
+
+    input::placeholder, textarea::placeholder {
+            color: #aaa; /* Yer tutucu metin rengi */
+            font-style: italic; /* Yer tutucu metni italik yapma */
+        }
+    .submit_input{
+        width: 92%;font-size: 16px;font-weight: 700;background-color: #333;color: #f4f4f4;
+
+    }
+    .submit_input:hover{
+        color: #f4f4f4;
+        background-color: black;
+        transition: all .55s ease;
+    }
+    .ls{
+        width: 30%;
+        margin:0px;
+        
+    }
+
+
+
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+          const alertBox = document.getElementById('customAlert');
+          const closeButtons = document.querySelectorAll('.close-btn');
+
+          // Her kapatma butonuna tıklama olayı ekle
+          closeButtons.forEach(button => {
+              button.addEventListener('click', () => {
+                  alertBox.style.display = 'none';
+              });
+          });
+
+          // Eğer mesaj varsa alert çubuğunu göster
+          if (alertBox) {
+              alertBox.style.display = 'block';
+          }
+      });
+      function myFunction() {
+    var x = document.getElementById("myLinks");
+    if (x.style.display === "block") {
+      x.style.display = "none";
+    } else {
+      x.style.display = "block";
+    }
+  }
+</script>
+
+
+</html>

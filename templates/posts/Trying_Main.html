@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+{% load static %}
+
+
+<link href="{% static 'css/posts.css' %}" rel="stylesheet">
+
+<script>
+    window.onload = function() {
+        const currentUrl = window.location.href;
+  
+        // Mobil yönlendirme için
+        if (window.innerWidth <= 768 && !currentUrl.includes('posts_mobile') && !currentUrl.includes('?redirected=true')) {
+            window.location.href = "{% url 'postlar:post_lister_mobile' %}?redirected=true";
+        } 
+        // PC yönlendirme için
+        else if (window.innerWidth > 768  && !currentUrl.includes('?redirected=false')) {
+            window.location.href = "{% url  'postlar:post_lister' %}?redirected=false";
+        }
+    };
+  </script>
+
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TR-Coders</title>
+    <ul class="navbar">
+        <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+        <li class="li2"><a href="{% url 'postlar:post_lister' %}" style="padding: 16px 16px">Ana Sayfa</a></li>
+        <li class="li3"><a href="{% url 'problems:all_problems' %}" style="padding: 16px 16px">Problemler</a></li>
+        <li class="li4" style="float: right;">
+            {% if user.is_authenticated %}
+              <div style="display: flex;justify-content: space-between;padding: 5px;align-items: center;gap: 10px;">
+                <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                <span><a href="{% url 'users:profile_viewer' user.username %}">{{ user.username }}</a></span>
+              </div>
+            {% else %}
+               <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+            {% endif %}
+        <li class="li5"><a href="{% url 'groups:all_groups' %}" style="padding: 16px 16px">Gruplar</a></li>
+        <li class="li6"><a href="{% url 'rankings:ranking' %}" style="padding: 16px 16px">Sıralama</a></li>
+    </ul>
+    
+</head>
+<body>
+  {% if messages %}
+  <div id="customAlert" class="alert">
+      {% for message in messages %}
+      <span>{{ message }}</span>
+      <button class="close-btn">&times;</button>
+      {% endfor %}
+  </div>
+  {% endif %}
+
+    
+    <div class="container">
+        <h1>En Yeni Duyurular</h1>
+        {% for post in post_list %}
+          <div style="display: flex;justify-content: space-between;">
+           <h2>{{post.title}}</h2>
+           <h4>#{{post.id}}</h4>
+          </div>
+          <div style="display: flex;justify-content: space-between;">
+          <p>{{post.icerik|safe|truncatewords_html:10|striptags}}</p>
+          <a href="{% url 'postlar:post_detail' post.pk %}" class="detail_linki">&#10140;</a>
+          </div>
+          <p><small>{{post.created_date}}</small></p>
+          
+          <hr>
+        {% endfor %}
+        <h6 ><a class="bp" href="{% url 'postlar:all_posts' %}">Butun Duyurular &#10140;</a></h6>
+
+        
+    </div>
+    <div class="container2">
+        <h1>En Yeni Problemler</h1>
+        {% for problem in problems %}
+           <div style="display: flex;justify-content: space-around;">
+            <div style="width: 8%">
+             <h4>#{{problem.id}}</h4>
+            </div>
+           <div style="width: 82%;">
+             {% if problem.title %}
+              <h3>{{problem.title}}</h3>
+             {% elif problem.title_az %}
+              <h3>{{problem.title_az}}</h3>
+             {% elif problem.title_en %}
+              <h3>{{problem.title_en}}</h3>
+             {% endif %}
+           </div> 
+            
+            <a href="{% url 'problems:problem_detail' problem.pk %}" class="detail_linki" style="float: right;font-weight: normal;margin-top: 16px;">&#10140;</a>
+           </div>
+           <hr>
+        {% endfor %}
+
+
+        
+        
+    </div>
+    
+    
+    
+
+    
+
+
+
+
+</body>
+<style>
+    body {
+            background-image: url('{% static "img/Background2.png" %}');
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+
+        /* Alert bar (yatay çubuk) */
+        .alert {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            text-align: left;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-left: 1%;
+            margin-right: 1%;
+            border-bottom: 1px solid #c3e6cb;
+            border-radius: 5px;
+
+        }
+
+        .alert .close-btn {
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+            margin-right: 10px;
+        }
+        .bp{
+            text-decoration: none;
+            color: #777;
+        }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+            const alertBox = document.getElementById('customAlert');
+            const closeButtons = document.querySelectorAll('.close-btn');
+
+            // Her kapatma butonuna tıklama olayı ekle
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    alertBox.style.display = 'none';
+                });
+            });
+
+            // Eğer mesaj varsa alert çubuğunu göster
+            if (alertBox) {
+                alertBox.style.display = 'block';
+            }
+        });
+</script>
+
+</html>

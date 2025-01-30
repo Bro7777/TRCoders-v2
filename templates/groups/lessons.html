@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+{% load static %}
+<script>
+    window.onload = function() {
+        const currentUrl = window.location.href;
+  
+        // Mobil yönlendirme için
+        if (window.innerWidth <= 768 && !currentUrl.includes('mobile')) {
+            window.location.href = "{% url 'groups:lessons_mobile' group.id %}";
+        } 
+        // PC yönlendirme için
+        else if (window.innerWidth > 768 && currentUrl.includes('mobile')) {
+            window.location.href = "{% url  'groups:lessons' group.id %}";
+        }
+    };
+  </script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TR-Coders</title>
+    <ul class="navbar">
+        <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+        <li class="li2"><a href="{% url 'postlar:post_lister' %}" style="padding: 16px 16px">Ana Sayfa</a></li>
+        <li class="li3"><a href="{% url 'problems:all_problems' %}" style="padding: 16px 16px">Problemler</a></li>
+        
+        <li class="li4" style="float: right;">
+            {% if user.is_authenticated %}
+              <div style="display: flex;justify-content: space-between;padding: 5px;">
+                <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                <a href="{% url 'users:profile_viewer' user.username %}"  style="margin-top: 11px;margin-left: 5px;">{{ user.username }}</a>
+              </div>
+            {% else %}
+               <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+            {% endif %}
+        </li>
+        <li class="li5"><a href="{% url 'groups:all_groups' %}" style="padding: 16px 16px">Gruplar</a></li>
+        <li class="li6"><a href="{% url 'rankings:ranking' %}" style="padding: 16px 16px">Sıralama</a></li>
+    </ul>
+    
+</head>
+<body>
+
+    <div class="container">
+        <div style=" margin-bottom: 30px; background-color: #333;border-radius: 25px;text-align: center;padding: 8px;display: flex;justify-content: space-around;">
+            <a href="{% url 'groups:group_detail' group.id %}" style="text-decoration: none;background-color: white;color: #333; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Ana Sayfa</h4></a>
+            <a href="{% url 'groups:members' group.id %}" style="text-decoration: none;background-color: white;color: #333; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Uyeler</h4></a>
+            <a href="{% url 'groups:lessons' group.id %}" style="text-decoration: none;background-color: white;color: black; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Dersler</h4></a>
+            <a href="{% url 'index:indev' %}"  style="text-decoration: none;background-color: white;color: black; border-radius: 15px;width: 100px;text-align: center;height: auto;"><h4>Yarislar</h4></a>
+        </div>
+
+        
+        
+
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+        <h1 id="title">{{group.name}} &ndash; Dersler</h1>
+        {% if group.admin == request.user %}
+        <a href="{% url 'groups:create_lesson' group.id %}" class="create_lesson">Ders ekle +</a>
+           <style>
+            .create_lesson{
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            color: white;
+            background-color: cornflowerblue;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 15%;
+            font-size: 16px;
+            border-radius: 15px;
+            transition: all .55s ease;
+            }
+           </style>
+        {%endif%}
+        </div>
+        {% for lesson in lessons %}
+           <div style="display: flex;justify-content: space-around;">
+            <div style="width: 8%">
+             <h4>#{{lesson.id}}</h4>
+            </div>
+           <div style="width: 82%;">
+             <h3>{{lesson.title}}</h3>
+           </div> 
+            
+            <a href="{% url 'groups:lesson_detail' group_id=group.id lesson_id=lesson.id %}
+            " class="detail_linki" style="float: right;font-weight: normal;margin-top: 16px;">&#10140;</a>
+           </div>
+           <hr>
+        {% endfor %}
+        
+        </div>
+        
+
+        </div>
+        
+        
+
+        
+    </div>
+    
+       
+
+</body>
+
+
+<style>
+    .navbar{
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        align-items: center;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+    .navbar li{
+        float: left;
+        
+        
+        
+    }
+    .navbar a{
+        display: block;
+        
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        
+        
+        text-decoration: none;
+    }
+    .li1{
+        padding: 12px 12px;
+    }
+    .li2{
+        padding: 18px 18px;
+    }
+    .li3{
+        padding: 18px 18px;
+    }
+    .li4{
+        padding: 18px 18px;
+        float: right;
+        margin-right: 50px;
+    }
+    .li5{
+        padding: 18px 18px;
+    }
+    .li6{
+        padding: 18px 18px;
+    }
+    .li2:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li3:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li4:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li5:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li6:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    
+    
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        background-image: url('{% static "img/Background2.png" %}');
+        background-size:  1300px 600px;
+        
+       
+    }
+    header {
+        
+        color: black;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .container {
+        margin: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    select{
+        padding: 10px;
+        border: 2px solid #ccc; /* Kenarlık rengi */
+        border-radius: 20px; /* Kenar yuvarlama */
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    }
+    .detail_linki{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #333;
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: #f4f4f4;
+    text-align: center;
+    transition: all .55s ease;
+}
+
+   
+
+    
+    
+    
+</style>
+</html>

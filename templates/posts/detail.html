@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="tr">
+    {% load static %}
+
+
+    <script>
+        window.onload = function() {
+            const currentUrl = window.location.href;
+      
+            // Mobil yönlendirme için
+            if (window.innerWidth <= 768 && !currentUrl.includes('detail_mobile') && !currentUrl.includes('?redirected=true')) {
+                window.location.href = "{% url 'postlar:post_detail_mobile' post.pk %}?redirected=true";
+            } 
+            // PC yönlendirme için
+            else if (window.innerWidth > 768  && !currentUrl.includes('?redirected=false')) {
+                window.location.href = "{% url  'postlar:post_detail' post.pk %}?redirected=false";
+            }
+        };
+      </script>
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TR-Coders</title>
+    <ul class="navbar">
+        <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+        <li class="li2"><a href="{% url 'postlar:post_lister' %}" style="padding: 16px 16px">Ana Sayfa</a></li>
+        <li class="li3"><a href="{% url 'problems:all_problems' %}" style="padding: 16px 16px">Problemler</a></li>
+        <li class="li4" style="float: right;">
+            {% if user.is_authenticated %}
+              <div style="display: flex;justify-content: space-between;padding: 5px;">
+                <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                <a href="{% url 'users:profile_viewer' user.username %}"  style="margin-top: 11px;margin-left: 5px;">{{ user.username }}</a>
+              </div>
+            {% else %}
+               <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+            {% endif %}
+        </li>
+        <li class="li5"><a href="{% url 'groups:all_groups' %}" style="padding: 16px 16px">Gruplar</a></li>
+        <li class="li6"><a href="{% url 'rankings:ranking' %}" style="padding: 16px 16px">Sıralama</a></li>
+    </ul>
+    
+</head>
+<body>
+    
+    <div class="container">
+        <h1>{{post.title}}</h1>
+        <hr style="border: 1px solid black; width: 100%; margin: auto;">
+
+
+        
+        
+        {% if post.image %}
+         <div style="text-align: center;margin-top: 20px;margin-bottom: 20px;" >
+           <img src="{{ post.image.url }}" alt="Post Image" style="max-width: 50%;height: auto;">
+         </div>
+        {% endif %}
+        <p>{{post.icerik|safe}}</p>
+
+        {% if request.user == post.user %}
+        <br><br>
+        <div style="padding: 5px;display: block;float: right;width: 100%;height: auto;">
+            <a href="" class="post_sil">Sil</a>
+            <a href="{% url  'postlar:post_updater' post.pk %}" class="post_edit">Düzenle</a>
+            
+            <style>
+            
+            .post_sil{
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            
+            color: white;
+            background-color: red;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 6%;
+            float: right;
+            font-size: 16px;
+            border-radius: 15px;
+            transition: all .55s ease;
+            }
+            .post_edit{
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            float: right;
+            color: white;
+            background-color: #333;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 6%;
+            font-size: 16px;
+            border-radius: 15px;
+            margin-right: 10px;
+            transition: all .55s ease;
+            }
+            
+                
+            </style>
+
+
+        </div>
+        {% endif %}
+
+        <hr style="border: 1px solid black; width: 100%; margin: auto;">
+
+        
+
+        <div style="display: flex;justify-content: space-between;">
+
+        <h6 style="color: #777;">Olusturuldu:{{post.created_date}}</h6>
+        <h6 style="color: #777;">Olusturan Kullanici:{{post.user}}</h6>
+
+        
+
+        </div>
+        
+
+        
+    </div>
+    <div class="container2">
+        <h2>Yorumlar({{post.comment.all|length}})</h2>
+        <hr style="border: 1px solid black; width: 100%; margin: auto;">
+        <div style="margin-top: 5px;">
+            <div style="text-align: center;display: block;border-radius: 20px;"  id="helpdiv">
+                <input type="text" id="commentInput" placeholder="Yorumunuzu yazın..." onclick="expandTextarea()">
+                <form action="" style="display: none;text-align: center;" method="post" id="cmform">
+                    {% csrf_token %}
+                    <div style="text-align: center;display: block;" >
+                    <textarea id="mesaj"  placeholder="Mesajınızı buraya yazınız" name="comment_icerik"></textarea><br><br>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end;">
+                    <input type="submit" class="submit_input" value="Gönder" style="float: right;">
+                    </div>
+
+                </form>
+
+            </div>
+            
+        </div>
+        {% if post.comment.all %}
+          {% for comment in post.comment.all %}
+            <div style="display: flex;justify-content: space-between;">
+            <div style="display: flex;">
+            {% with profile=comment.user.profiles.first %}
+                {% if profile and profile.profile_photo %}
+                <img src="{{ profile.profile_photo.url }}"  width="40" height="40" style="border-radius: 50%;border: 3px solid gray;margin-top: 5px;margin-right: 5px;">
+                {% endif %}
+            {% endwith %}
+                <h3>{{comment.user}}</h3>
+            </div>
+             <h5 style="font-weight: normal;color: #777;">{{comment.created_date}}</h5>
+            </div>
+            <div style="display: flex;justify-content: space-between;">
+                <p style="margin-left: 45px;">{{comment.comment_icerik|safe}}</p>
+                {% if request.user == comment.user %}
+                  <div style="display: block;">
+                    <a href="#coMentedit" class="comment_edit">Düzenle</a>
+                    <a href="{% url 'postlar:comment_deleter' comment.pk %}" class="comment_sil">Sil</a>
+                  </div>
+               {% endif %}
+            </div>
+            
+
+            
+          {% endfor %}
+       
+        {% else %}
+        <div style="text-align: center;">
+           <p>Burada hic bir sey yok</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if scroll_to_top %}
+    <script>
+       window.scrollTo(0, 0);  // Sayfayı en üstüne kaydır
+    </script>
+    {% endif %}
+    
+    
+    
+    
+
+    
+
+
+
+
+</body>
+<script>
+    function expandTextarea() {
+    const input = document.getElementById("commentInput");
+    const form = document.getElementById("cmform");
+    const h=document.getElementById("helpdiv")
+    
+
+    // Input'u gizle, textarea ve butonu göster
+    input.style.display = "none";
+    form.style.display = "block";
+    h.style.backgroundColor= "rgb(211, 211, 211)"
+    
+}
+</script>
+<style>
+    .navbar{
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        align-items: center;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+    .navbar li{
+        float: left;
+        
+        
+        
+    }
+    .navbar a{
+        display: block;
+        
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        
+        
+        text-decoration: none;
+    }
+    .li1{
+        padding: 12px 12px;
+    }
+    .li2{
+        padding: 18px 18px;
+    }
+    .li3{
+        padding: 18px 18px;
+    }
+    .li4{
+        padding: 18px 18px;
+        float: right;
+        margin-right: 50px;
+    }
+    .li5{
+        padding: 18px 18px;
+    }
+    .li6{
+        padding: 18px 18px;
+    }
+    .li2:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li3:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li4:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li5:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li6:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    
+    
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        background-image: url('{% static "img/Background2.png" %}');
+        background-size:  1300px 600px;
+        
+       
+    }
+    header {
+        
+        color: black;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .container {
+        margin: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    .container2 {
+        margin: 20px;
+        margin-left: 100px;
+        margin-right: 100px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    input{
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            border: 2px solid #ccc; /* Kenarlık rengi */
+            border-radius: 20px; /* Kenar yuvarlama */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* İç gölge */
+            transition: border-color 0.3s; /* Kenarlık rengi geçiş efekti */
+            width: 96%; /* Genişlik ayarı */
+            margin-top: 4px;
+            margin-bottom: 4px; /* Alt boşluk */
+        }
+    textarea{
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            
+            border: 2px solid #ccc; /* Kenarlık rengi */
+            border-radius: 20px; /* Kenar yuvarlama */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* İç gölge */
+            transition: border-color 0.3s; /* Kenarlık rengi geçiş efekti */
+            width: 96%; /* Genişlik ayarı */
+            margin-top: 4px;
+            margin-bottom: 3px; /* Alt boşluk */
+            
+        }
+
+    input:focus, textarea:focus{
+            border-color: #007bff; /* Odaklandığında kenarlık rengi */
+            outline: none; /* Varsayılan odak çerçevesini kaldırma */
+        }
+
+    input::placeholder, textarea::placeholder {
+            color: #aaa; /* Yer tutucu metin rengi */
+            font-style: italic; /* Yer tutucu metni italik yapma */
+        }
+    .submit_input{
+        width: 20%;font-size: 16px;font-weight: 500;background-color: #333;color: #f4f4f4;
+        
+        margin-right: 1%;
+
+    }
+    .submit_input:hover{
+        color: #f4f4f4;
+        background-color: black;
+        transition: all .55s ease;
+    }
+    .comment_edit{
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            padding: 5px;
+            display: inline-block;
+            color: white;
+            background-color: #333;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 70px;
+            
+            font-size: 16px;
+            border-radius: 10px;
+            
+            transition: all .55s ease;
+    }
+    .comment_sil{
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            color: white;
+            background-color: #dc3545;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 70px;
+            font-size: 16px;
+            border-radius: 10px;
+            transition: all .55s ease;
+    }
+    
+    
+    
+    
+
+    
+    
+    
+</style>
+</html>

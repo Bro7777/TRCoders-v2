@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="tr">
+    {% load static %}
+    <script>
+        window.onload = function() {
+            const currentUrl = window.location.href;
+    
+            // Mobil yönlendirme için
+            if (window.innerWidth <= 768 && !currentUrl.includes('index_about_mobile') && !currentUrl.includes('?redirected=true')) {
+                window.location.href = "{% url 'index:index_about_mobile' %}?redirected=true";
+            } 
+            // PC yönlendirme için
+            else if (window.innerWidth > 768 && !currentUrl.includes('index_about') && !currentUrl.includes('?redirected=false')) {
+                window.location.href = "{% url 'index:index_about' %}?redirected=false";
+            }
+        };
+    </script>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TR-Coders</title>
+    <ul class="navbar">
+        <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+        <li class="li2"><a href="{% url 'index:index_about' %}" style="padding: 16px 16px">Hakkında</a></li>
+        <li class="li3"><a href="{% url 'index:index_contact' %}" style="padding: 16px 16px">İletişim</a></li>
+    </ul>
+    
+</head>
+<body>
+    <div class="container">
+        <p style="font-size: 18px;">TR-Coders, Türkiye’nin ilk algoritma ve yazılım problemleri çözme platformu olma hedefiyle yola çıktı. Amacımız, kullanıcıların sorular çözüp kodlama becerilerini geliştirebileceği bir topluluk oluşturmaktır.</p>
+        <h2>Geliştiriciler:</h2>
+        <ul class="developers">
+        <li style="font-size: 17px;">Bro7777</li>
+        </ul>
+        
+    
+
+        <h6>Bütün hakları saklıdır.TR-Coders &copy 2024 </h6>
+
+    </div>
+    
+</body>
+<style>
+    .navbar{
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        align-items: center;
+    }
+    .navbar li{
+        float: right;
+        
+        
+        
+    }
+    .navbar a{
+        display: block;
+        
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        
+        
+        text-decoration: none;
+    }
+    .li1{
+        padding: 12px 12px;
+    }
+    .li2{
+        padding: 18px 18px;
+    }
+    .li3{
+        padding: 18px 18px;
+    }
+    .li2:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li3:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    
+    
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        background-image: url('{% static "img/Background2.png" %}');
+        background-size:  1300px 600px;
+        
+       
+    }
+
+    .container{
+        margin: 20px;
+        margin-left: 20px;
+        margin-right: 600px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    h6{
+        margin-top: 50px;
+    }
+
+    .developer li{
+        font-size: 25px;
+    }
+</style>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+{% load static %}
+<script>
+    window.onload = function() {
+        const currentUrl = window.location.href;
+
+        // Mobil yönlendirme için
+        if (window.innerWidth <= 768 && !currentUrl.includes('index_about_mobile') && !currentUrl.includes('?redirected=true')) {
+            window.location.href = "{% url 'index:index_about_mobile' %}?redirected=true";
+        } 
+        // PC yönlendirme için
+        else if (window.innerWidth > 768 && !currentUrl.includes('index_about') && !currentUrl.includes('?redirected=false')) {
+            window.location.href = "{% url 'index:index_about' %}?redirected=false";
+        }
+    };
+</script>
+
+
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Top Navigation Menu -->
+<div class="topnav" style="margin:0">
+  <a href="{% url 'index:index_mobile' %}" style="margin-left:0;text-align: left;" class="active"><img src="{% static 'img/Logo2.png' %}" width="200" height="60" ></a>
+<!-- Navigation links (hidden by default) -->
+  <div id="myLinks">
+   <a href="{% url 'index:index_contact_mobile' %}">Contact</a>
+   <a href="{% url 'index:index_about_mobile' %}">About</a>
+  </div>
+<!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+   <i class="fa fa-bars"></i>
+  </a>
+</div>
+</head>
+<body>
+<div class="container">
+    <p style="font-size: 18px;">TR-Coders, Türkiye’nin ilk algoritma ve yazılım problemleri çözme platformu olma hedefiyle yola çıktı. Amacımız, kullanıcıların sorular çözüp kodlama becerilerini geliştirebileceği bir topluluk oluşturmaktır.</p>
+        <h2>Geliştiriciler:</h2>
+        <ul class="developers">
+        <li style="font-size: 17px;">Bro7777</li>
+        </ul>
+        
+    
+
+        <h6>Bütün hakları saklıdır.TR-Coders &copy 2024 </h6>
+    
+ 
+
+</div>
+
+<div style="text-align:center">
+
+</div>
+
+</body>
+<style>
+/* Style the navigation menu */
+.topnav {
+position: relative;
+margin:0px;
+padding:0px;
+
+overflow: hidden;
+background-color: #333;
+border-bottom-left-radius:50px;
+border-bottom-right-radius:50px;
+
+}
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+display: none;
+}
+
+/* Style navigation menu links */
+.topnav a {
+color: white;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+display: block;
+text-align:center;
+
+}
+
+/* Style the hamburger menu */
+.topnav a.icon {
+   background: none;
+   display: block;
+   position:absolute;
+   top:20px;
+   right: 12px;
+}
+
+/* Add a grey background color on mouse-over */
+.topnav a:hover {
+background-color: black;
+color: white;
+}
+
+/* Style the active link (or home/logo) */
+.active {
+background-color: #333;
+color: white;
+margin-left:0px;
+
+}
+
+.container {
+ margin: 20px;
+ margin-left: 10px;
+ margin-right: 10px;
+ padding: 15px;
+ background-color: white;
+ border-radius: 20px;
+ box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+}
+
+body {
+ font-family: Arial, sans-serif;
+ margin: 0;
+ padding: 0;
+ background-color: #f4f4f4;
+ background-image: url('{% static "img/Background2.png" %}');
+ background-size:100% 100%;
+
+
+}
+
+
+</style>
+<script>
+/* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
+function myFunction() {
+var x = document.getElementById("myLinks");
+if (x.style.display === "block") {
+ x.style.display = "none";
+} else {
+ x.style.display = "block";
+}
+}
+
+</script>
+</html>

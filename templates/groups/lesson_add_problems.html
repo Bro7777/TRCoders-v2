@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+{%load static%}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problemleri Derse Ekle</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<head>
+        <title>TR-Coders</title>
+        <ul class="navbar">
+            <li style="float:left" class="li1"><a href="{% url 'index:index' %}" ><img src="{% static 'img/Logo2.png' %}" width="200" height="60"></a></li>
+            <li class="li2"><a href="{% url 'postlar:post_lister' %}" style="padding: 16px 16px">Ana Sayfa</a></li>
+            <li class="li3"><a href="{% url 'problems:all_problems' %}" style="padding: 16px 16px">Problemler</a></li>
+            
+            <li class="li4" style="float: right;">
+                {% if user.is_authenticated %}
+                  <div style="display: flex;justify-content: space-between;padding: 5px;">
+                    <img src="{{ profile.profile_photo.url }}" style="border-radius: 50%;width: 35px;height: 35px;object-fit: cover;border:3px solid grey ;">
+                    <a href="{% url 'users:profile_viewer' user.username %}"  style="margin-top: 11px;margin-left: 5px;">{{ user.username }}</a>
+                  </div>
+                {% else %}
+                   <a href="{% url 'users:signup' %}" style="padding: 16px 16px;">Kayıt ol</a>
+                {% endif %}
+            </li>
+            <li class="li5"><a href="{% url 'groups:all_groups' %}" style="padding: 16px 16px">Gruplar</a></li>
+            <li class="li6"><a href="{% url 'rankings:ranking' %}" style="padding: 16px 16px">Sıralama</a></li>
+        </ul>
+</head>
+    <style>
+        .problem-item {
+            cursor: pointer;
+            padding: 10px;
+        }
+        .problem-item:hover {
+            background-color: #f0f0f0;
+        }
+        .selected-problems {
+            margin-top: 20px;
+        }
+        .selected-problem {
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .search-results{
+            cursor: pointer;
+            padding: 0px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            
+            
+
+        }
+        .remove-problem{
+            padding: 10px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            color: white;
+            background-color: #dc3545;
+            border: 1px solid transparent;
+            height: auto ;
+            width: 15%;
+            font-size: 16px;
+            border-radius: 15px;
+            transition: all .55s ease;
+            }
+    </style>
+</head>
+<body>
+
+        <div class="container">
+        <h1>{{ lesson.title }} &ndash; Problem Ekle</h1>
+    
+        <form id="add-problems-form" method="POST">
+            {% csrf_token %}
+            <label for="search">Problemler Ara:</label>
+            <input type="text" id="search" placeholder="Problem adı yazın...">
+            <div id="search-results" class="search-results"></div>
+    
+            <h3 style="text-align: center;">Seçilen Problemler:</h3>
+            <div class="selected-problems" id="selected-problems" ></div>
+            
+    
+            <input type="submit" class="submit_input" value="Secilen problemleri ekle"></input>
+        </form>
+        </div>
+</body>
+
+
+<script>
+        $(document).ready(function () {
+            const selectedProblems = new Map(); 
+            $('#search').on('input', function () {
+                const query = $(this).val();
+
+                if (query.length > 0) {
+                    $.getJSON("{% url 'groups:search_problems' group_id=group.id lesson_id=lesson.id %}", { q: query }, function (data) {
+                        let resultsHtml = '';
+
+                        data.forEach(problem => {
+                            resultsHtml += `<div class="problem-item" data-id="${problem.id}">#${problem.id} ${problem.title}</div>`;
+                        });
+
+                        $('#search-results').html(resultsHtml);
+                    });
+                } else {
+                    $('#search-results').html('');
+                }
+            });
+
+            // Sonuçlardan problem seçme
+            $('#search-results').on('click', '.problem-item', function () {
+                const problemId = $(this).data('id');
+                const problemTitle = $(this).text();
+
+                if (!selectedProblems.has(problemId)) {
+                    selectedProblems.set(problemId, problemTitle);
+
+                    $('#selected-problems').append(`
+                        <div data-id="${problemId}" style="display: flex;justify-content: space-between;text-align: center;" >
+                            <p>${problemTitle}</p> 
+                            <a class="remove-problem">Kaldir</a>
+                            <input type="hidden" name="problems" value="${problemId}">
+                        </div>
+                        <hr style="margin-top: 5px;">
+                    `);
+                }
+            });
+
+            // Seçilen problemleri kaldırma
+            $('#selected-problems').on('click', '.remove-problem', function () {
+                const problemId = $(this).parent().data('id');
+                selectedProblems.delete(problemId);
+                $(this).parent().remove();
+            });
+        });
+</script>
+
+<style>
+    .navbar{
+        margin: 0;
+        overflow: hidden;
+        background-color: #333;
+        list-style-type: none;
+        align-items: center;
+        border-bottom-left-radius: 50px;
+        border-bottom-right-radius: 50px;
+    }
+    .navbar li{
+        float: left;
+        
+        
+        
+    }
+    .navbar a{
+        display: block;
+        
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        
+        
+        text-decoration: none;
+    }
+    .li1{
+        padding: 12px 12px;
+    }
+    .li2{
+        padding: 18px 18px;
+    }
+    .li3{
+        padding: 18px 18px;
+    }
+    .li4{
+        padding: 18px 18px;
+        float: right;
+        margin-right: 50px;
+    }
+    .li5{
+        padding: 18px 18px;
+    }
+    .li6{
+        padding: 18px 18px;
+    }
+    .li2:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li3:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li4:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li5:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    .li6:hover{
+        background-color: rgb(0, 0, 0);
+    }
+    
+    
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        background-image: url("{% static 'img/Background2.png' %}");
+        background-size:  1300px 600px;
+        
+       
+    }
+    header {
+        
+        color: black;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .container {
+        margin: 40px;
+        margin-left: 400px;
+        margin-right: 400px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+    }
+    input, textarea, select {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            border: 2px solid #ccc; /* Kenarlık rengi */
+            border-radius: 20px; /* Kenar yuvarlama */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* İç gölge */
+            transition: border-color 0.3s; /* Kenarlık rengi geçiş efekti */
+            width: 96%; /* Genişlik ayarı */
+            margin-bottom: 5px; /* Alt boşluk */
+        }
+
+    input:focus, textarea:focus, select:focus {
+            border-color: #007bff; /* Odaklandığında kenarlık rengi */
+            outline: none; /* Varsayılan odak çerçevesini kaldırma */
+        }
+
+    input::placeholder, textarea::placeholder {
+            color: #aaa; /* Yer tutucu metin rengi */
+            font-style: italic; /* Yer tutucu metni italik yapma */
+        }
+    .submit_input{
+        margin-top: 20px;
+        width: 100%;font-size: 16px;font-weight: 700;background-color: #333;color: #f4f4f4;
+    }
+    .submit_input:hover{
+        color: #f4f4f4;
+        background-color: black;
+        transition: all .55s ease;
+    }
+    
+    
+</style>
+</html>
