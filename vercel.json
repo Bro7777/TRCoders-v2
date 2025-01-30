@@ -1,8 +1,15 @@
 {
+    "builds": [
+      {
+        "src": "manage.py",
+        "use": "@vercel/python"
+      }
+    ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "try_project/wsgi.py"
+        "dest": "manage.py"
       }
     ]
   }
+  
