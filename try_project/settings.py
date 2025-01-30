@@ -77,11 +77,20 @@ WSGI_APPLICATION = 'try_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+}'''
+import dj_database_url
+import environ
+
+env=environ.Env()
+environ.Env.read_env()
+
+DATABASES = {
+    'default': dj_database_url.parse(env("DATABASE_URL"))
 }
 
 
@@ -117,9 +126,9 @@ USE_TZ = True
 
 
 #ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','https://tr-coders-v2.vercel.app/']
+CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','https://tr-coders-v2.vercel.app/']
+CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','https://tr-coders-v2.vercel.app/']
 CORS_ALLOW_ALL_ORIGINS = True
 
 
