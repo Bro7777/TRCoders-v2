@@ -69,8 +69,8 @@ TEMPLATES = [
     },
 ]
 
-#WSGI_APPLICATION = 'try_project.wsgi.application'
-ASGI_APPLICATION = 'try_project.asgi.application'
+WSGI_APPLICATION = 'try_project.wsgi.application'
+#ASGI_APPLICATION = 'try_project.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
