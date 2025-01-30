@@ -1,10 +1,13 @@
 {
     "version": 2,
+
     "builds": [
-      { "src": "try_project/asgi.py", "use": "@vercel/python" }
+      { "src": "start_server.sh", "use": "@vercel/static" }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "try_project.asgi.application" }
+      { "src": "/(.*)", "dest": "start_server.sh" }
     ]
   }
+
+
   
