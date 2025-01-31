@@ -31,7 +31,7 @@ import dj_database_url
 import environ
 
 env=environ.Env()
-environ.Env.read_env()
+env.Env.read_env()
 
 AWS_ACCESS_KEY_ID=env("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY=env("AWS_SECRET_ACCESS_KEY")
