@@ -28,7 +28,35 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AWS_ACCESS_KEY_ID='AKIAUJ3VUOQD2PEIKRXK'
+AWS_SECRET_ACCESS_KEY='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'
 
+
+AWS_STORAGE_BUCKET_NAME='trcoders-v-2'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_FILE_OVERWRITE=False
+
+STORAGES ={
+
+# Media file (image) management
+
+  "default": {
+
+    "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+
+  },
+
+
+
+# CSS and JS file management
+
+  "staticfiles": {
+
+    "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+
+  },
+
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +67,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'TRCodersTrying','django_cleanup','ckeditor','users','problems','groups','ranking'
+    'TRCodersTrying','django_cleanup','ckeditor','users','problems','groups','ranking',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -126,9 +155,9 @@ USE_TZ = True
 
 
 #ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
+CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
 CORS_ALLOW_ALL_ORIGINS = True
 
 
