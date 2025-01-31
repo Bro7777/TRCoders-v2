@@ -33,14 +33,32 @@ import environ
 env=environ.Env()
 environ.Env.read_env()
 
-AWS_ACCESS_KEY_ID=env("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY=env("AWS_SECRET_ACCESS_KEY")
-
+AWS_ACCESS_KEY_ID='AKIAUJ3VUOQD2PEIKRXK'
+AWS_SECRET_ACCESS_KEY='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'
 
 AWS_STORAGE_BUCKET_NAME='trcoders-v-2'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_FILE_OVERWRITE=False
+AWS_S3_REGION_NAME = "eu-north-1"
+AWS_S3_FILE_OVERWRITE=True
 
+
+STATIC_URL = 'static/'
+MEDIA_URL='media/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # static klasörünü ekliyoruz
+]
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT= os.path.join(BASE_DIR,"media")
+
+
+STATICFILES_STORAGE = "try_project.storages.StaticStorage"
+DEFAULT_FILE_STORAGE = "try_project.storages.MediaStorage"
 STORAGES ={
 
 # Media file (image) management
@@ -156,9 +174,9 @@ USE_TZ = True
 
 
 #ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
-CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
+CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
 CORS_ALLOW_ALL_ORIGINS = True
 
 
@@ -168,8 +186,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-MEDIA_URL='media/'
+'''STATIC_URL = 'static/'
+#MEDIA_URL='media/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # static klasörünü ekliyoruz
@@ -178,7 +196,7 @@ STATICFILES_DIRS = [
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"  # collectstatic ile toplama yapacağın yer
-MEDIA_ROOT= BASE_DIR/"media"
+#MEDIA_ROOT= BASE_DIR/"media"'''
 
 
 
