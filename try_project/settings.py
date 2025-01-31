@@ -156,9 +156,9 @@ USE_TZ = True
 
 
 #ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49']
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
-CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
-CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev']#,'.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '25.21.178.49','514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
+CSRF_TRUSTED_ORIGINS =['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://514ca86c-5eed-4e1d-91b7-2a27a828c018-00-2pnqv1itcb65f.pike.replit.dev','.vercel.app']
 CORS_ALLOW_ALL_ORIGINS = True
 
 
