@@ -27,9 +27,14 @@ SECRET_KEY = 'django-insecure-+&z^)k_92tl&&th)5$idf)fk-u=$b=i24$b-^2r!3w&27u)di9
 DEBUG = True
 
 ALLOWED_HOSTS = []
+import dj_database_url
+import environ
 
-AWS_ACCESS_KEY_ID='AKIAUJ3VUOQD2PEIKRXK'
-AWS_SECRET_ACCESS_KEY='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'
+env=environ.Env()
+environ.Env.read_env()
+
+AWS_ACCESS_KEY_ID=env("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY=env("AWS_SECRET_ACCESS_KEY")
 
 
 AWS_STORAGE_BUCKET_NAME='trcoders-v-2'
@@ -112,11 +117,7 @@ WSGI_APPLICATION = 'try_project.wsgi.application'
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }'''
-import dj_database_url
-import environ
 
-env=environ.Env()
-environ.Env.read_env()
 
 DATABASES = {
     'default': dj_database_url.parse(env("DATABASE_URL"))
