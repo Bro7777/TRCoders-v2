@@ -2,7 +2,7 @@ import time
 from django.http import JsonResponse
 
 # Kullanıcı başına 5 saniyede 1 isteğe izin veriyoruz
-REQUEST_LIMIT = 5  # saniye
+REQUEST_LIMIT = 1  # saniye
 user_requests = {}
 
 class RateLimitMiddleware:
